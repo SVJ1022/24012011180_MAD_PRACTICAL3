@@ -139,14 +139,11 @@ resources required for the application.
 
 ## 📁 Updated / Added Files
 
-> **Fill this section with the exact files modified or created during
-> development.**
-
--   
--   
--   
--   
--   
+-   MainActiviy.kt
+-   activity_main.xml
+-   LoginActivity.kt
+-   activity_login.xml
+-   guni_pink_logo (added)
 
 ------------------------------------------------------------------------
 
