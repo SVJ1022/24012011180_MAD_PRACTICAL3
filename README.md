@@ -1,166 +1,387 @@
-# 📱 Practical-3 --- Implicit & Explicit Intent
+# 📱 Practical-3 — Implicit & Explicit Intent
 
-> **Aim:** Create an Android application which demonstrates implicit &
-> explicit Intent.
+> **Aim:** Develop an Android application demonstrating the use of **Implicit Intent** and **Explicit Intent**.
 
-------------------------------------------------------------------------
+---
 
 ## 🎯 Objective
 
-This practical demonstrates the use of **Implicit Intent** and
-**Explicit Intent** in an Android application.
+This practical implements an Android application in Kotlin that uses Intents to perform different Android operations.
 
-The application performs the following operations:
+The project demonstrates:
 
-1.  Make call to a specific number
-2.  Open specific URL
-3.  Open Call Log
-4.  Open Gallery
-5.  Set Alarm
-6.  Open Camera
-7.  Open Login Activity
+- Opening a URL in a browser
+- Opening the phone dialer with a supplied number
+- Opening the Call Log
+- Opening the Gallery/Image picker
+- Opening the Camera
+- Opening the Alarm application
+- Opening another Activity using an Explicit Intent
 
-------------------------------------------------------------------------
+The project contains two Activities:
 
-## 🧩 Intent Types
+```text
+MainActivity
+     │
+     └── Explicit Intent ──► LoginActivity
+```
+
+---
+
+## 📂 Project Structure
+
+```text
+24012011180_MAD_PRACTICAL3/
+│
+├── app/
+│   ├── src/
+│   │   ├── main/
+│   │   │   ├── java/com/example/a24012011180_mad_practical_3/
+│   │   │   │   ├── MainActivity.kt
+│   │   │   │   └── LoginActivity.kt
+│   │   │   ├── res/
+│   │   │   │   └── ...
+│   │   │   └── AndroidManifest.xml
+│   │   └── ...
+│   └── build.gradle.kts
+│
+├── gradle/
+├── .gitignore
+├── build.gradle.kts
+├── gradle.properties
+├── gradlew
+├── gradlew.bat
+├── settings.gradle.kts
+└── README.md
+```
+
+---
+
+# 🔗 What is an Intent?
+
+An **Intent** is used to request an action from another Android component or application.
+
+This project demonstrates two categories:
 
 ### 1. Implicit Intent
 
-An **Implicit Intent** is used when an action is requested without
-specifying the exact Activity that should handle the operation.
+An implicit intent does not directly name the component that should handle the request. Android determines a suitable application/component.
 
-In this practical, implicit intents are used for operations such as:
+Examples used in this project:
 
--   Making a call
--   Opening a URL
--   Opening Call Log
--   Opening Gallery
--   Setting an Alarm
--   Opening Camera
+- Browser
+- Dialer
+- Call Log
+- Gallery
+- Camera
+- Alarm application
 
 ### 2. Explicit Intent
 
-An **Explicit Intent** specifies the Activity that should be opened.
+An explicit intent identifies the Activity that should be opened.
 
-In this practical, an Explicit Intent is used to open the **Login
-Activity**.
+This project uses an explicit intent to open:
 
-------------------------------------------------------------------------
-
-## 📋 Operations
-
-  Operation   Function
-  ----------- ----------------------------------
-  Make Call   Make a call to a specific number
-  Open URL    Open a specified website
-  Call Log    Open the device Call Log
-  Gallery     Open the Gallery
-  Set Alarm   Set/open the alarm operation
-  Camera      Open the Camera
-  Login       Open Login Activity
-
-------------------------------------------------------------------------
-
-## 🔄 Intent Flow
-
-``` text
-                    MainActivity
-                         │
-          ┌──────────────┼──────────────┐
-          │              │              │
-          ▼              ▼              ▼
-        Call            URL          Call Log
-          │              │              │
-          ├──────────────┼──────────────┤
-          │              │              │
-          ▼              ▼              ▼
-      Gallery         Alarm          Camera
-                         │
-                         ▼
-                  Login Activity
-                  (Explicit Intent)
+```text
+LoginActivity
 ```
 
-------------------------------------------------------------------------
+from `MainActivity`.
 
-## 🧩 Main Components
+---
 
-### MainActivity
+# 🧩 Implicit Intent Operations
 
-`MainActivity` contains the UI controls for performing all the required
-Intent operations.
+## 🌐 1. Browse URL
 
-### Login Activity
+The `Browse` button reads the URL entered by the user and creates an `ACTION_VIEW` intent.
 
-A separate Login Activity is created in the project and opened using an
-**Explicit Intent**.
+```kotlin
+Intent(
+    Intent.ACTION_VIEW,
+    Uri.parse(findViewById<EditText>(R.id.url_text).text.toString())
+)
+```
 
-### Android Built-in Resources
+The intent is then started using:
 
-The practical also studies Android built-in resources and drawable
-resources required for the application.
+```kotlin
+startActivity(it)
+```
 
-------------------------------------------------------------------------
+This allows a compatible browser application to handle the URL.
 
-## 🛠️ Development Steps
+---
 
-1.  Create `MainActivity` according to the required UI.
-2.  Add controls for each required operation.
-3.  Implement an Intent for making a call to a specific number.
-4.  Implement an Intent for opening a specific URL.
-5.  Implement an Intent for opening the Call Log.
-6.  Implement an Intent for opening the Gallery.
-7.  Implement an Intent for setting an Alarm.
-8.  Implement an Intent for opening the Camera.
-9.  Create the Login Activity.
-10. Use an Explicit Intent to open the Login Activity.
-11. Test all operations on the device/emulator.
+## 📞 2. Dial a Phone Number
 
-------------------------------------------------------------------------
+The `Call` button reads a number from the input field and opens the phone dialer.
 
-## 📚 Concepts Covered
+```kotlin
+val intent = Intent(Intent.ACTION_DIAL)
+intent.setData("tel:$number".toUri())
+startActivity(intent)
+```
 
--   Intent
--   Implicit Intent
--   Explicit Intent
--   `startActivity()`
--   `Intent.ACTION_DIAL`
--   Call Log
--   Gallery
--   Camera
--   Alarm
--   URL handling
--   Activity navigation
--   Android built-in resources
--   Drawable resources
--   Creating Activity
+`ACTION_DIAL` opens the dialer with the number prepared for dialing.
 
-------------------------------------------------------------------------
+---
 
-## 📁 Updated / Added Files
+## 📋 3. Call Log
 
--   MainActiviy.kt
--   activity_main.xml
--   LoginActivity.kt
--   activity_login.xml
--   guni_pink_logo (added)
+The application opens the device Call Log using:
 
-------------------------------------------------------------------------
+```kotlin
+Intent(
+    Intent.ACTION_VIEW,
+    Uri.parse("content://call_log/calls")
+)
+```
+
+The intent is started with:
+
+```kotlin
+startActivity(intent)
+```
+
+---
+
+## 🖼️ 4. Gallery
+
+The Gallery/Image picker is opened using:
+
+```kotlin
+val intent = Intent(Intent.ACTION_PICK)
+intent.type = "image/*"
+startActivity(intent)
+```
+
+The `image/*` MIME type restricts the picker request to image content.
+
+---
+
+## 📷 5. Camera
+
+The Camera application is opened using:
+
+```kotlin
+Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+```
+
+The project then starts the intent:
+
+```kotlin
+startActivity(it)
+```
+
+---
+
+## ⏰ 6. Alarm
+
+The Alarm application is opened using Android's `AlarmClock` provider:
+
+```kotlin
+Intent(AlarmClock.ACTION_SHOW_ALARMS)
+```
+
+This displays the available alarms on the device.
+
+---
+
+# 🔐 Explicit Intent — Login Activity
+
+The `Login` button demonstrates explicit Activity navigation.
+
+```kotlin
+Intent(
+    this,
+    LoginActivity::class.java
+)
+```
+
+The intent is started with:
+
+```kotlin
+startActivity(it)
+```
+
+This directly opens `LoginActivity`.
+
+---
+
+# 🔄 Application Flow
+
+```text
+                  ┌─────────────────┐
+                  │   MainActivity  │
+                  └────────┬────────┘
+                           │
+          ┌────────────────┼────────────────┐
+          │                │                │
+          ▼                ▼                ▼
+       Browse            Call           Call Log
+          │                │                │
+          ▼                ▼                ▼
+       Browser           Dialer         Call Log
+
+          ┌────────────────┼────────────────┐
+          │                │                │
+          ▼                ▼                ▼
+       Gallery           Camera           Alarm
+          │                │                │
+          ▼                ▼                ▼
+       Image Picker     Camera App      Alarm App
+
+                           │
+                           ▼
+                    ┌───────────────┐
+                    │ Login Button  │
+                    └───────┬───────┘
+                            │
+                     Explicit Intent
+                            │
+                            ▼
+                    ┌───────────────┐
+                    │ LoginActivity │
+                    └───────────────┘
+```
+
+---
+
+# 🧱 MainActivity
+
+`MainActivity.kt` contains the main Intent implementation.
+
+The Activity:
+
+1. Enables edge-to-edge display.
+2. Loads `activity_main`.
+3. Applies system-bar insets.
+4. Calls `implicitIntent()`.
+5. Calls `explicitIntent()`.
+
+```kotlin
+implicitIntent()
+explicitIntent()
+```
+
+---
+
+# ⚙️ `implicitIntent()` Function
+
+The function attaches click listeners to the following buttons:
+
+```text
+Browse
+Call
+Call Log
+Gallery
+Camera
+Alarm
+```
+
+Each button creates and starts the appropriate Android Intent.
+
+### Implemented APIs
+
+| Operation | Android API |
+|---|---|
+| Browser | `Intent.ACTION_VIEW` |
+| Dialer | `Intent.ACTION_DIAL` |
+| Call Log | `Intent.ACTION_VIEW` |
+| Gallery | `Intent.ACTION_PICK` |
+| Camera | `MediaStore.ACTION_IMAGE_CAPTURE` |
+| Alarm | `AlarmClock.ACTION_SHOW_ALARMS` |
+
+---
+
+# 🔐 `explicitIntent()` Function
+
+The explicit intent is implemented separately.
+
+```kotlin
+fun explicitIntent() {
+    findViewById<Button>(R.id.Login).setOnClickListener {
+        Intent(this, LoginActivity::class.java).also {
+            startActivity(it)
+        }
+    }
+}
+```
+
+This keeps the external application operations separate from Activity-to-Activity navigation.
+
+---
+
+# 🧩 LoginActivity
+
+`LoginActivity.kt` is the second Activity in the project.
+
+Its main purpose in this practical is to provide a destination for the Explicit Intent from `MainActivity`.
+
+The Activity:
+
+- Extends `AppCompatActivity`
+- Enables edge-to-edge display
+- Loads `activity_login`
+- Applies system-bar insets
+
+```kotlin
+setContentView(R.layout.activity_login)
+```
+
+---
+
+# 📚 Concepts Covered
+
+| Concept | Demonstration |
+|---|---|
+| Intent | Requesting an Android action |
+| Implicit Intent | Opening external apps/services |
+| Explicit Intent | Opening `LoginActivity` |
+| `startActivity()` | Starting an Intent |
+| `ACTION_VIEW` | Browser and Call Log |
+| `ACTION_DIAL` | Phone dialer |
+| `ACTION_PICK` | Image picker |
+| `ACTION_IMAGE_CAPTURE` | Camera |
+| `AlarmClock.ACTION_SHOW_ALARMS` | Alarm application |
+| `Uri` | URL, telephone and Call Log data |
+| MIME Type | `image/*` |
+| Activity Navigation | Main → Login |
+| Edge-to-Edge | Window display configuration |
+
+---
+
+# 🛠️ Development Steps
+
+1. Create an Android Studio project.
+2. Create the Main Activity layout.
+3. Add input fields for URL and phone number.
+4. Add buttons for Browse, Call, Call Log, Gallery, Camera, Alarm and Login.
+5. Create a second `LoginActivity`.
+6. Implement the implicit Intent operations.
+7. Implement the explicit Intent for `LoginActivity`.
+8. Run the application on an emulator or Android device.
+9. Test each button individually.
+10. Verify that the requested Android application/activity opens.
+
+---
 
 ## ▶️ How to Run
 
-1.  Open the project in **Android Studio**.
-2.  Build and run the application.
-3.  Verify the main screen and its controls.
-4.  Test the specific-number call operation.
-5.  Test the URL button.
-6.  Test the Call Log button.
-7.  Test the Gallery button.
-8.  Test the Alarm button.
-9.  Test the Camera button.
-10. Press Login and verify that the Login Activity opens.
+1. Open the project in **Android Studio**.
+2. Allow Gradle synchronization to complete.
+3. Select an emulator or connected Android device.
+4. Build the application.
+5. Run the application.
+6. Enter a URL and press **Browse**.
+7. Enter a phone number and press **Call**.
+8. Test **Call Log**, **Gallery**, **Camera** and **Alarm**.
+9. Press **Login** to open `LoginActivity`.
 
-------------------------------------------------------------------------
+> Some operations depend on the applications/services available on the Android device or emulator.
+
+---
 
 ## 🖼️ OUTPUT
 <table>
@@ -177,10 +398,24 @@ resources required for the application.
     <td align="center"><b>Login Page</b></td>
   </tr>
 </table>
-------------------------------------------------------------------------
+
+---
+
+## 📌 Important Source Files
+
+### Kotlin
+
+- `MainActivity.kt`
+- `LoginActivity.kt`
+
+### Android
+
+- `activity_main.xml`
+- `activity_login.xml`
+- `AndroidManifest.xml`
+
+---
 
 ## ✅ Result
 
-The Android application was successfully developed to demonstrate
-**Implicit and Explicit Intents for call, URL, Call Log, Gallery, Alarm,
-Camera and Activity navigation operations**.
+The Android application was successfully developed to demonstrate **Implicit Intent** and **Explicit Intent** operations, including browser, dialer, Call Log, Gallery, Camera, Alarm and Activity-to-Activity navigation.
